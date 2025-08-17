@@ -1,33 +1,42 @@
 package Busresv;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
-public class Bus {
-    private int busNo;
-    private boolean ac;
-    private int capacity; //get and set
+public class Booking {
+    String passengerName;
+            int busNo;
+            Date date;
 
-    Bus(int no,boolean ac,int cap){
-        this.busNo = no;
-        this.ac = ac;
-        this.capacity = cap;
-    }
-    public int getBusNo() { //accessers
-        return busNo;
-    }
-    public boolean isAc() { //accessers
-        return ac;
-    }
-    public int getCapacity() { //accessers
-        return capacity;
-    }
-    public void setAc(boolean val) { //accessers
-        ac = val;
-    }
-    public void setCapacity(int cap) { //mutator
-        capacity = cap;
-    }
+            Booking(){
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("Enter name of passenger: ");
+                passengerName = scanner.next();
+                System.out.println("Enter bus no:");
+                busNo = scanner.nextInt();
+                System.out.println("Enter date dd-mm-yyyy");
+                String dateInput = scanner.next();
+                SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy"); // Changed from dd-mm-yyyy
 
-    public void displayBusInfo(){
-        System.out.println("Bus No:" + busNo + "Ac:" + ac + " Total Capacity:" + capacity );
-    }
+               try {
+                   date = dateFormat.parse(dateInput);
+               }catch (ParseException e) {
+                   //TODO Auto-generated catah block
+                   e.printStackTrace();
+               }
+            }
+            public boolean isAvailable(ArrayList<Booking> bookings,ArrayList <Bus>buses) {
+               int capacity = 0;
+               for(Bus bus:buses) {
+                   if(bus.getBusNo() == busNo)
+                       capacity = bus.getCapacity();
+               }
+               int booked = 0;
+               for(Booking b:bookings) {
+                   if (b.busNo == busNo && b.date.compareTo(date) == 0) {
+                       booked++;
+                   }
+               }
+               return booked < capacity;
+            }
 }
-
